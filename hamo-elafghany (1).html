@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hamo Elafghany — Project Developer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    [data-theme="dark"] {
+      --bg:#0a0a0f; --surface:#111118; --surface2:#16161f;
+      --gold:#c9a84c; --gold-light:#e8c97a; --cream:#f5f0e8;
+      --muted:#6b6b80; --white:#ffffff; --border:rgba(201,168,76,0.18);
+      --text-body:#a0a0b8; --input-bg:#16161f; --nav-bg:rgba(10,10,15,0.78);
+    }
+    [data-theme="light"] {
+      --bg:#faf8f4; --surface:#ffffff; --surface2:#f0ece4;
+      --gold:#a07830; --gold-light:#c9a84c; --cream:#1a1a2e;
+      --muted:#7a7a8a; --white:#1a1a2e; --border:rgba(160,120,48,0.22);
+      --text-body:#4a4a5a; --input-bg:#f5f0e8; --nav-bg:rgba(250,248,244,0.88);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--cream);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;transition:background .4s,color .4s}
+    body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:.35}
+
+    /* NAV */
+    nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 4rem;border-bottom:1px solid var(--border);backdrop-filter:blur(20px);background:var(--nav-bg);transition:background .4s}
+    .nav-logo{font-family:'Playfair Display',serif;font-weight:900;font-size:1.3rem;color:var(--gold);letter-spacing:.03em;text-decoration:none}
+    .nav-links{display:flex;gap:2rem;list-style:none;align-items:center}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;transition:color .3s}
+    .nav-links a:hover{color:var(--gold)}
+    .nav-right{display:flex;gap:.8rem;align-items:center}
+    .theme-toggle{background:transparent;border:1px solid var(--border);width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:border-color .3s,transform .2s}
+    .theme-toggle:hover{border-color:var(--gold);transform:rotate(20deg)}
+    .mobile-menu-btn{display:none;background:transparent;border:1px solid var(--border);color:var(--gold);width:38px;height:38px;border-radius:3px;cursor:pointer;font-size:1.2rem;align-items:center;justify-content:center}
+
+    /* MOBILE NAV */
+    .mobile-nav{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:300;flex-direction:column;align-items:center;justify-content:center;gap:2.5rem}
+    .mobile-nav.open{display:flex}
+    .mobile-nav a{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;color:var(--cream);text-decoration:none;transition:color .3s}
+    .mobile-nav a:hover{color:var(--gold)}
+    .mobile-close{position:absolute;top:1.5rem;right:2rem;background:transparent;border:none;color:var(--muted);font-size:2rem;cursor:pointer}
+
+    /* BUTTONS */
+    .btn-primary{background:var(--gold);color:var(--bg);padding:.85rem 2.2rem;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;text-decoration:none;border-radius:2px;transition:background .3s,transform .2s;display:inline-block}
+    .btn-primary:hover{background:var(--gold-light);transform:translateY(-2px)}
+    .btn-secondary{background:transparent;color:var(--gold);padding:.85rem 2.2rem;font-family:'DM Sans',sans-serif;font-size:.82rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--border);cursor:pointer;text-decoration:none;border-radius:2px;transition:border-color .3s,color .3s,transform .2s;display:inline-block}
+    .btn-secondary:hover{border-color:var(--gold);color:var(--gold-light);transform:translateY(-2px)}
+
+    /* HERO */
+    .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;padding:7rem 4rem 4rem;overflow:hidden}
+    .hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 60% 40%,rgba(201,168,76,.09) 0%,transparent 70%),radial-gradient(ellipse 40% 60% at 10% 80%,rgba(201,168,76,.05) 0%,transparent 60%)}
+    .hero-grid-lines{position:absolute;inset:0;background-image:linear-gradient(rgba(201,168,76,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,76,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,black 30%,transparent 80%)}
+    .hero-content{position:relative;max-width:1100px;width:100%}
+    .hero-tag{display:inline-block;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);padding:.35rem 1rem;border-radius:2px;margin-bottom:2rem;animation:fadeUp .8s ease both}
+    .hero-name{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(3.5rem,8vw,7.5rem);line-height:.95;color:var(--white);animation:fadeUp .9s .1s ease both}
+    .hero-name span{color:var(--gold);display:block}
+    .hero-title{font-family:'Playfair Display',serif;font-size:clamp(1.1rem,2.5vw,1.8rem);font-weight:400;font-style:italic;color:var(--muted);margin-top:1.2rem;animation:fadeUp 1s .2s ease both}
+    .hero-desc{max-width:520px;margin-top:1.8rem;font-size:1.02rem;line-height:1.75;color:var(--text-body);animation:fadeUp 1s .3s ease both}
+    .hero-cta{display:flex;gap:1.2rem;margin-top:2.8rem;flex-wrap:wrap;animation:fadeUp 1s .4s ease both}
+    .hero-badge{position:absolute;right:0;top:50%;transform:translateY(-50%);width:220px;height:220px;border:1px solid var(--border);border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:rgba(17,17,24,.6);backdrop-filter:blur(12px);animation:fadeUp 1s .5s ease both,spin 30s linear infinite}
+    @keyframes spin{from{transform:translateY(-50%) rotate(0deg)}to{transform:translateY(-50%) rotate(360deg)}}
+    .hero-badge-inner{animation:spinR 30s linear infinite;display:flex;flex-direction:column;align-items:center}
+    @keyframes spinR{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
+    .hero-badge-num{font-family:'Playfair Display',serif;font-size:3rem;font-weight:900;color:var(--gold);line-height:1}
+    .hero-badge-text{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-top:.4rem}
+
+    /* SECTIONS */
+    section{padding:7rem 4rem}
+    .section-header{display:flex;align-items:center;gap:1.2rem;margin-bottom:3.5rem}
+    .section-tag{font-size:.7rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);white-space:nowrap}
+    .section-line{flex:1;height:1px;background:var(--border)}
+    .section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:700;color:var(--white);margin-bottom:1rem}
+
+    /* ABOUT */
+    #about{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .about-grid{display:grid;grid-template-columns:auto 1fr 1fr;gap:4rem;max-width:1200px;margin:0 auto;align-items:start}
+
+    /* PHOTO */
+    .photo-col{display:flex;flex-direction:column;align-items:center;gap:1rem}
+    .photo-frame{width:180px;height:220px;border:2px solid var(--border);border-radius:4px;overflow:hidden;position:relative;background:linear-gradient(135deg,var(--surface2) 0%,var(--surface) 100%);flex-shrink:0;transition:border-color .3s}
+    .photo-frame:hover{border-color:var(--gold)}
+    .photo-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6rem}
+    .photo-placeholder .avi{font-size:3.5rem;opacity:.35}
+    .photo-placeholder p{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:center;padding:0 .8rem}
+    .photo-frame img{width:100%;height:100%;object-fit:cover}
+    .photo-upload-btn{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);padding:.4rem .9rem;background:transparent;cursor:pointer;border-radius:2px;width:100%;transition:border-color .3s,background .3s}
+    .photo-upload-btn:hover{border-color:var(--gold);background:rgba(201,168,76,.06)}
+    #photoInput{display:none}
+
+    .about-text p{font-size:1rem;line-height:1.85;color:var(--text-body);margin-bottom:1.2rem}
+    .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+    .stat-card{border:1px solid var(--border);padding:1.8rem;border-radius:4px;background:rgba(201,168,76,.03);transition:border-color .3s,transform .3s}
+    .stat-card:hover{border-color:var(--gold);transform:translateY(-4px)}
+    .stat-num{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;color:var(--gold);line-height:1}
+    .stat-label{font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.4rem}
+
+    /* CV BANNER */
+    .cv-banner{background:linear-gradient(90deg,rgba(201,168,76,.1),rgba(201,168,76,.04));border:1px solid var(--border);border-radius:4px;padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;max-width:1200px;margin:4rem auto 0;flex-wrap:wrap}
+    .cv-banner-text strong{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--white);display:block}
+    .cv-banner-text span{font-size:.85rem;color:var(--muted)}
+
+    /* SERVICES */
+    .services-wrap{max-width:1200px;margin:0 auto}
+    .services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5px;background:var(--border);border:1px solid var(--border)}
+    .service-card{background:var(--bg);padding:2.8rem 2.2rem;transition:background .3s;position:relative;overflow:hidden}
+    .service-card::before{content:'';position:absolute;bottom:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--gold),transparent);transform:scaleX(0);transform-origin:left;transition:transform .4s}
+    .service-card:hover{background:var(--surface)}
+    .service-card:hover::before{transform:scaleX(1)}
+    .service-icon{font-size:2rem;margin-bottom:1.4rem}
+    .service-name{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--white);margin-bottom:.8rem}
+    .service-desc{font-size:.9rem;line-height:1.7;color:var(--muted)}
+
+    /* PROJECTS */
+    #projects{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .projects-wrap{max-width:1200px;margin:0 auto}
+    .projects-list{display:flex;flex-direction:column;gap:1px;background:var(--border)}
+    .project-item{background:var(--surface);display:flex;align-items:center;justify-content:space-between;padding:2rem 2.5rem;transition:background .3s,padding-left .3s;gap:2rem}
+    .project-item:hover{background:rgba(201,168,76,.05);padding-left:3rem}
+    .project-number{font-family:'Playfair Display',serif;font-size:.85rem;color:var(--gold);opacity:.6;min-width:2.5rem}
+    .project-info{flex:1}
+    .project-name{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--white)}
+    .project-type{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:.3rem}
+    .project-desc{font-size:.87rem;color:var(--text-body);margin-top:.4rem;max-width:360px}
+    .project-tags{display:flex;gap:.6rem;flex-wrap:wrap}
+    .tag{font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border:1px solid var(--border);padding:.25rem .65rem;border-radius:2px}
+    .project-arrow{color:var(--muted);font-size:1.2rem;transition:color .3s,transform .3s}
+    .project-item:hover .project-arrow{color:var(--gold);transform:translateX(6px)}
+
+    /* SKILLS */
+    .skills-wrap{max-width:1200px;margin:0 auto}
+    .skills-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+    .skill-pill{border:1px solid var(--border);padding:1rem 1.4rem;border-radius:3px;font-size:.82rem;letter-spacing:.08em;color:var(--text-body);text-align:center;transition:border-color .3s,color .3s,background .3s}
+    .skill-pill:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05)}
+
+    /* CONTACT */
+    #contact{background:var(--surface);border-top:1px solid var(--border)}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;max-width:1200px;margin:0 auto;align-items:start}
+    .contact-info h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;color:var(--white);margin-bottom:1rem}
+    .contact-info h2 span{color:var(--gold)}
+    .contact-info>p{font-size:1rem;line-height:1.75;color:var(--text-body);margin-bottom:2rem}
+    .contact-links{display:flex;flex-direction:column;gap:.8rem}
+    .contact-link{display:flex;align-items:center;gap:.9rem;color:var(--cream);text-decoration:none;font-size:.9rem;padding:1rem 1.4rem;border:1px solid var(--border);border-radius:3px;transition:border-color .3s,color .3s,background .3s,transform .2s}
+    .contact-link:hover{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.05);transform:translateX(6px)}
+    .clink-icon{font-size:1.1rem;width:1.5rem;text-align:center}
+
+    /* FORM */
+    .contact-form{display:flex;flex-direction:column;gap:1.2rem}
+    .fg{display:flex;flex-direction:column;gap:.45rem}
+    .fg label{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+    .fg input,.fg textarea,.fg select{background:var(--input-bg);border:1px solid var(--border);color:var(--cream);padding:.9rem 1.1rem;font-family:'DM Sans',sans-serif;font-size:.95rem;font-weight:300;border-radius:3px;outline:none;transition:border-color .3s,background .3s;width:100%}
+    .fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--gold);background:rgba(201,168,76,.03)}
+    .fg textarea{resize:vertical;min-height:130px}
+    .fg select option{background:var(--surface)}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+    .form-msg{padding:1rem 1.4rem;border-radius:3px;font-size:.9rem;display:none;border:1px solid;margin-top:.4rem}
+    .form-msg.success{border-color:#4caf50;color:#4caf50;background:rgba(76,175,80,.08);display:block}
+    .form-msg.error{border-color:#f44336;color:#f44336;background:rgba(244,67,54,.08);display:block}
+
+    /* DEPLOY */
+    #deploy{padding:6rem 4rem;background:var(--bg)}
+    .deploy-wrap{max-width:1200px;margin:0 auto}
+    .deploy-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2.5rem}
+    .deploy-card{border:1px solid var(--border);padding:2rem;border-radius:4px;background:var(--surface);position:relative;overflow:hidden;transition:border-color .3s,transform .3s}
+    .deploy-card:hover{border-color:var(--gold);transform:translateY(-4px)}
+    .dc-num{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;color:var(--gold);opacity:.12;position:absolute;top:.4rem;right:1rem;line-height:1}
+    .dc-platform{font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
+    .dc-title{font-family:'Playfair Display',serif;font-size:1.25rem;font-weight:700;color:var(--white);margin-bottom:.9rem}
+    .dc-list{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+    .dc-list li{font-size:.87rem;color:var(--text-body);padding-left:1.2rem;position:relative;line-height:1.5}
+    .dc-list li::before{content:'→';position:absolute;left:0;color:var(--gold);font-size:.75rem}
+    .dc-badge{display:inline-block;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;background:rgba(201,168,76,.15);color:var(--gold);padding:.2rem .6rem;border-radius:2px;margin-top:1rem}
+    code{background:rgba(201,168,76,.15);color:var(--gold);padding:.1rem .4rem;border-radius:2px;font-family:monospace;font-size:.85rem}
+    .domain-tip{margin-top:2rem;border:1px solid var(--border);padding:1.8rem 2rem;border-radius:4px;background:rgba(201,168,76,.04);display:flex;align-items:flex-start;gap:1.2rem}
+    .domain-tip-icon{font-size:1.8rem;flex-shrink:0}
+    .domain-tip h4{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--white);margin-bottom:.4rem}
+    .domain-tip p{font-size:.9rem;color:var(--text-body);line-height:1.65}
+
+    /* FOOTER */
+    footer{padding:2rem 4rem;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .footer-logo{font-family:'Playfair Display',serif;font-weight:900;font-size:1rem;color:var(--gold)}
+    .footer-links{display:flex;gap:1.5rem}
+    .footer-links a{font-size:.75rem;color:var(--muted);text-decoration:none;letter-spacing:.08em;text-transform:uppercase;transition:color .3s}
+    .footer-links a:hover{color:var(--gold)}
+    .footer-copy{font-size:.75rem;color:var(--muted);letter-spacing:.06em}
+
+    /* ANIMATIONS */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+
+    /* RESPONSIVE */
+    @media(max-width:1000px){
+      nav{padding:1.2rem 2rem}
+      .nav-links{display:none}
+      .mobile-menu-btn{display:flex}
+      section{padding:5rem 2rem}
+      #deploy{padding:4rem 2rem}
+      footer{padding:1.5rem 2rem;flex-direction:column;gap:1rem;text-align:center}
+      .footer-links{justify-content:center}
+      .hero{padding:6rem 2rem 4rem}
+      .hero-badge{display:none}
+      .about-grid{grid-template-columns:1fr;gap:3rem}
+      .photo-col{flex-direction:row;align-items:flex-start}
+      .services-grid{grid-template-columns:1fr}
+      .skills-grid{grid-template-columns:repeat(2,1fr)}
+      .contact-grid{grid-template-columns:1fr;gap:3rem}
+      .deploy-cards{grid-template-columns:1fr}
+      .form-row{grid-template-columns:1fr}
+      .hero-cta{flex-direction:column;max-width:260px}
+    }
+  </style>
+</head>
+<body>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-close" onclick="closeMobileNav()">✕</button>
+  <a href="#about" onclick="closeMobileNav()">About</a>
+  <a href="#services" onclick="closeMobileNav()">Services</a>
+  <a href="#projects" onclick="closeMobileNav()">Projects</a>
+  <a href="#skills" onclick="closeMobileNav()">Skills</a>
+  <a href="#contact" onclick="closeMobileNav()">Contact</a>
+  <a href="#deploy" onclick="closeMobileNav()">Go Live</a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">H·E</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#deploy">Go Live</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-toggle" id="themeToggle" title="Toggle light/dark">☀️</button>
+    <button class="mobile-menu-btn" onclick="openMobileNav()">☰</button>
+    <a href="#contact" class="btn-primary" style="font-size:.72rem;padding:.6rem 1.4rem;">Hire Me</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-lines"></div>
+  <div class="hero-content">
+    <div class="hero-tag">✦ Available for new projects</div>
+    <h1 class="hero-name">Hamo<span>Elafghany</span></h1>
+    <p class="hero-title">Project Developer &amp; Builder</p>
+    <p class="hero-desc">I design, develop, and deliver complete projects from scratch — whatever you imagine, I build it. Full-stack development, creative solutions, and flawless execution every time.</p>
+    <div class="hero-cta">
+      <a href="#projects" class="btn-primary">View Projects</a>
+      <a href="#contact" class="btn-secondary">Get In Touch</a>
+      <a href="#" class="btn-secondary cv-dl-btn">⬇ Download CV</a>
+    </div>
+  </div>
+  <div class="hero-badge">
+    <div class="hero-badge-inner">
+      <div class="hero-badge-num">∞</div>
+      <div class="hero-badge-text">Any Project<br>Any Scale</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT + PHOTO + STATS -->
+<section id="about">
+  <div class="about-grid">
+
+    <!-- PHOTO UPLOAD -->
+    <div class="photo-col reveal">
+      <div class="photo-frame" id="photoFrame">
+        <div class="photo-placeholder" id="photoPlaceholder">
+          <div class="avi">👤</div>
+          <p>Your photo here</p>
+        </div>
+        <img id="photoImg" src="" alt="Hamo Elafghany" style="display:none"/>
+      </div>
+      <input type="file" id="photoInput" accept="image/*" onchange="uploadPhoto(event)"/>
+      <button class="photo-upload-btn" onclick="document.getElementById('photoInput').click()">+ Upload Photo</button>
+    </div>
+
+    <!-- TEXT -->
+    <div class="about-text reveal">
+      <div class="section-header">
+        <span class="section-tag">About Me</span>
+        <div class="section-line"></div>
+      </div>
+      <h2 class="section-title">I Build Projects<br>End to End</h2>
+      <p>My name is Hamo Elafghany and I am a dedicated project developer with a passion for turning ideas into fully functional, polished products. I handle everything — from concept to deployment.</p>
+      <p>Whether you need a web application, a software tool, a mobile solution, or a complex system integration, I bring technical depth and creative problem-solving to make it happen — on time and beyond expectations.</p>
+      <a href="#contact" class="btn-primary" style="margin-top:1.5rem">Start a Project</a>
+    </div>
+
+    <!-- STATS -->
+    <div class="about-stats reveal">
+      <div class="stat-card"><div class="stat-num">100%</div><div class="stat-label">Completion Rate</div></div>
+      <div class="stat-card"><div class="stat-num">∞</div><div class="stat-label">Project Types</div></div>
+      <div class="stat-card"><div class="stat-num">24/7</div><div class="stat-label">Availability</div></div>
+      <div class="stat-card"><div class="stat-num">1st</div><div class="stat-label">Class Delivery</div></div>
+    </div>
+  </div>
+
+  <!-- CV BANNER -->
+  <div class="cv-banner reveal">
+    <div class="cv-banner-text">
+      <strong>Download My CV</strong>
+      <span>Full overview of my experience, skills, and past work.</span>
+    </div>
+    <a href="#" class="btn-primary cv-dl-btn">⬇ Download CV (PDF)</a>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-wrap">
+    <div class="reveal">
+      <div class="section-header"><span class="section-tag">What I Do</span><div class="section-line"></div></div>
+      <h2 class="section-title" style="margin-bottom:3rem">Services</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal"><div class="service-icon">🌐</div><div class="service-name">Web Development</div><p class="service-desc">Full-stack websites and web applications — from landing pages to complex platforms, built with clean, scalable code.</p></div>
+      <div class="service-card reveal"><div class="service-icon">📱</div><div class="service-name">App Development</div><p class="service-desc">Cross-platform mobile apps and desktop applications tailored to your exact requirements and user needs.</p></div>
+      <div class="service-card reveal"><div class="service-icon">⚙️</div><div class="service-name">System &amp; Backend</div><p class="service-desc">Robust backend systems, APIs, databases, and server infrastructure that power your product at any scale.</p></div>
+      <div class="service-card reveal"><div class="service-icon">🤖</div><div class="service-name">Automation &amp; AI</div><p class="service-desc">Smart automation tools, AI-powered features, and bot development that streamline your workflow and save time.</p></div>
+      <div class="service-card reveal"><div class="service-icon">🎨</div><div class="service-name">UI/UX Design</div><p class="service-desc">Beautiful, intuitive interfaces that users love — designed with purpose and attention to every visual detail.</p></div>
+      <div class="service-card reveal"><div class="service-icon">🚀</div><div class="service-name">Custom Projects</div><p class="service-desc">Got an unusual idea or a unique challenge? I build custom solutions for any project, no matter how complex.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="projects-wrap">
+    <div class="reveal">
+      <div class="section-header"><span class="section-tag">Portfolio</span><div class="section-line"></div></div>
+      <h2 class="section-title" style="margin-bottom:3rem">Selected Projects</h2>
+    </div>
+    <div class="projects-list reveal">
+      <div class="project-item">
+        <span class="project-number">01</span>
+        <div class="project-info"><div class="project-name">E-Commerce Platform</div><div class="project-type">Web Application</div><div class="project-desc">Full-featured online store with payments, inventory management, and admin dashboard.</div></div>
+        <div class="project-tags"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">MongoDB</span></div>
+        <span class="project-arrow">→</span>
+      </div>
+      <div class="project-item">
+        <span class="project-number">02</span>
+        <div class="project-info"><div class="project-name">Business Management System</div><div class="project-type">Full-Stack System</div><div class="project-desc">ERP-style system for managing employees, tasks, reports, and analytics.</div></div>
+        <div class="project-tags"><span class="tag">Python</span><span class="tag">Django</span><span class="tag">PostgreSQL</span></div>
+        <span class="project-arrow">→</span>
+      </div>
+      <div class="project-item">
+        <span class="project-number">03</span>
+        <div class="project-info"><div class="project-name">Mobile Delivery App</div><div class="project-type">Mobile Application</div><div class="project-desc">Real-time order tracking, driver routing, and notifications for a food delivery startup.</div></div>
+        <div class="project-tags"><span class="tag">React Native</span><span class="tag">Firebase</span></div>
+        <span class="project-arrow">→</span>
+      </div>
+      <div class="project-item">
+        <span class="project-number">04</span>
+        <div class="project-info"><div class="project-name">Automation Dashboard</div><div class="project-type">Automation Tool</div><div class="project-desc">Data scraping, processing, and reporting pipeline saving 20+ hours per week.</div></div>
+        <div class="project-tags"><span class="tag">Python</span><span class="tag">Selenium</span><span class="tag">FastAPI</span></div>
+        <span class="project-arrow">→</span>
+      </div>
+      <div class="project-item">
+        <span class="project-number">05</span>
+        <div class="project-info"><div class="project-name">AI Chatbot Integration</div><div class="project-type">AI / NLP</div><div class="project-desc">Custom AI assistant handling support tickets and onboarding inside a SaaS product.</div></div>
+        <div class="project-tags"><span class="tag">OpenAI</span><span class="tag">Node.js</span><span class="tag">Next.js</span></div>
+        <span class="project-arrow">→</span>
+      </div>
+      <div class="project-item">
+        <span class="project-number">06</span>
+        <div class="project-info"><div class="project-name">Real Estate Listing Portal</div><div class="project-type">Web Platform</div><div class="project-desc">Property search, virtual tours, agent profiles, and lead capture for a real estate agency.</div></div>
+        <div class="project-tags"><span class="tag">Next.js</span><span class="tag">Prisma</span><span class="tag">AWS</span></div>
+        <span class="project-arrow">→</span>
+      </div>
+      <div class="project-item">
+        <span class="project-number">07</span>
+        <div class="project-info"><div class="project-name">School Management System</div><div class="project-type">Education Platform</div><div class="project-desc">Student records, attendance, grades, timetables, and a parent portal for a school network.</div></div>
+        <div class="project-tags"><span class="tag">Laravel</span><span class="tag">MySQL</span><span class="tag">Vue.js</span></div>
+        <span class="project-arrow">→</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="skills-wrap">
+    <div class="reveal">
+      <div class="section-header"><span class="section-tag">Tech Stack</span><div class="section-line"></div></div>
+      <h2 class="section-title" style="margin-bottom:3rem">Skills &amp; Tools</h2>
+    </div>
+    <div class="skills-grid reveal">
+      <div class="skill-pill">JavaScript</div><div class="skill-pill">TypeScript</div>
+      <div class="skill-pill">Python</div><div class="skill-pill">PHP / Laravel</div>
+      <div class="skill-pill">React.js</div><div class="skill-pill">Next.js</div>
+      <div class="skill-pill">Vue.js</div><div class="skill-pill">Node.js</div>
+      <div class="skill-pill">Django</div><div class="skill-pill">React Native</div>
+      <div class="skill-pill">PostgreSQL</div><div class="skill-pill">MongoDB</div>
+      <div class="skill-pill">Firebase</div><div class="skill-pill">Docker</div>
+      <div class="skill-pill">AWS / Cloud</div><div class="skill-pill">Git &amp; GitHub</div>
+      <div class="skill-pill">REST APIs</div><div class="skill-pill">GraphQL</div>
+      <div class="skill-pill">UI / UX Design</div><div class="skill-pill">AI Integration</div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <div class="section-header"><span class="section-tag">Contact</span><div class="section-line"></div></div>
+      <h2>Let's Build<br><span>Something Great</span></h2>
+      <p>Have a project in mind? Fill in the form and I'll get back to you within 24 hours. Or reach me directly below.</p>
+      <div class="contact-links">
+        <a href="mailto:hamo.elafghany@gmail.com" class="contact-link"><span class="clink-icon">✉</span>hamo.elafghany@gmail.com</a>
+        <a href="https://wa.me/YOUR_NUMBER" class="contact-link" target="_blank"><span class="clink-icon">💬</span>WhatsApp — Chat Now</a>
+        <a href="https://linkedin.com/in/YOUR_PROFILE" class="contact-link" target="_blank"><span class="clink-icon">🔗</span>LinkedIn Profile</a>
+        <a href="https://github.com/YOUR_USERNAME" class="contact-link" target="_blank"><span class="clink-icon">💻</span>GitHub — View Code</a>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="contact-form">
+        <div class="form-row">
+          <div class="fg"><label>Your Name</label><input type="text" id="fname" placeholder="Ahmed Mohamed"/></div>
+          <div class="fg"><label>Email Address</label><input type="email" id="femail" placeholder="ahmed@email.com"/></div>
+        </div>
+        <div class="fg">
+          <label>Project Type</label>
+          <select id="ftype">
+            <option value="">Select a service...</option>
+            <option>Web Development</option><option>Mobile App</option>
+            <option>System / Backend</option><option>Automation / AI</option>
+            <option>UI/UX Design</option><option>Custom Project</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Budget Range</label>
+          <select id="fbudget">
+            <option value="">Select budget...</option>
+            <option>Under $500</option><option>$500 – $2,000</option>
+            <option>$2,000 – $5,000</option><option>$5,000+</option>
+            <option>Let's discuss</option>
+          </select>
+        </div>
+        <div class="fg"><label>Tell Me About Your Project</label><textarea id="fmessage" placeholder="Describe your project idea, goals, timeline..."></textarea></div>
+        <button class="btn-primary" onclick="submitForm()" style="width:100%;padding:1rem;margin-top:.4rem">Send Message →</button>
+        <div class="form-msg" id="formMsg"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GO LIVE / DEPLOY GUIDE -->
+<section id="deploy">
+  <div class="deploy-wrap">
+    <div class="reveal">
+      <div class="section-header"><span class="section-tag">Go Live</span><div class="section-line"></div></div>
+      <h2 class="section-title" style="margin-bottom:.6rem">How to Publish This Website</h2>
+      <p style="color:var(--text-body);font-size:1rem;margin-bottom:2.5rem">3 free ways to get your site live on the internet in minutes.</p>
+    </div>
+    <div class="deploy-cards reveal">
+      <div class="deploy-card">
+        <div class="dc-num">1</div>
+        <div class="dc-platform">Netlify — Easiest</div>
+        <div class="dc-title">Drag &amp; Drop Deploy</div>
+        <ul class="dc-list">
+          <li>Go to <strong>netlify.com/drop</strong></li>
+          <li>Drag your HTML file into the page</li>
+          <li>Your site goes live instantly</li>
+          <li>Free <code>.netlify.app</code> URL given</li>
+          <li>Add custom domain in Settings</li>
+        </ul>
+        <span class="dc-badge">✓ 100% Free</span>
+      </div>
+      <div class="deploy-card">
+        <div class="dc-num">2</div>
+        <div class="dc-platform">GitHub Pages</div>
+        <div class="dc-title">Via GitHub Repo</div>
+        <ul class="dc-list">
+          <li>Create account at <strong>github.com</strong></li>
+          <li>Create new repository</li>
+          <li>Upload file as <code>index.html</code></li>
+          <li>Settings → Pages → Deploy from branch</li>
+          <li>URL: <code>username.github.io/repo</code></li>
+        </ul>
+        <span class="dc-badge">✓ 100% Free</span>
+      </div>
+      <div class="deploy-card">
+        <div class="dc-num">3</div>
+        <div class="dc-platform">Custom Domain</div>
+        <div class="dc-title">Your Own .com Domain</div>
+        <ul class="dc-list">
+          <li>Buy domain at <strong>Namecheap.com</strong> (~$10/yr)</li>
+          <li>Deploy on Netlify (Step 1)</li>
+          <li>Netlify → Domain Settings → Add domain</li>
+          <li>Update DNS records at registrar</li>
+          <li>Wait up to 24 hrs — you're live!</li>
+        </ul>
+        <span class="dc-badge">~$10/year</span>
+      </div>
+    </div>
+    <div class="domain-tip reveal">
+      <div class="domain-tip-icon">💡</div>
+      <div>
+        <h4>Recommended Domain Names for You</h4>
+        <p>Try <code>hamo.dev</code>, <code>hamoelafghany.com</code>, or <code>elafghany.dev</code>. The <code>.dev</code> extension looks very professional for developers. Keep it short, easy to remember, and close to your real name. Always grab the <code>.com</code> version too if available.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Hamo Elafghany</div>
+  <div class="footer-links">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 · All Rights Reserved</div>
+</footer>
+
+<script>
+  /* Theme */
+  const html = document.documentElement;
+  const toggleBtn = document.getElementById('themeToggle');
+  let isDark = true;
+  function setTheme(dark) {
+    isDark = dark;
+    html.setAttribute('data-theme', dark ? 'dark' : 'light');
+    toggleBtn.textContent = dark ? '☀️' : '🌙';
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  }
+  toggleBtn.addEventListener('click', () => setTheme(!isDark));
+  if (localStorage.getItem('theme') === 'light') setTheme(false);
+
+  /* Mobile nav */
+  function openMobileNav() { document.getElementById('mobileNav').classList.add('open'); }
+  function closeMobileNav() { document.getElementById('mobileNav').classList.remove('open'); }
+
+  /* Scroll reveal */
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  /* Photo upload */
+  function uploadPhoto(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = document.getElementById('photoImg');
+      document.getElementById('photoPlaceholder').style.display = 'none';
+      img.src = e.target.result;
+      img.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  /* CV download */
+  document.querySelectorAll('.cv-dl-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('📄 To enable CV download:\n\n1. Save your CV as "hamo-cv.pdf"\n2. Put it in the same folder as this HTML file\n3. Change href="#" to href="hamo-cv.pdf" on the CV buttons\n\nDone! Visitors can then download it directly.');
+    });
+  });
+
+  /* Contact form */
+  function submitForm() {
+    const name = document.getElementById('fname').value.trim();
+    const email = document.getElementById('femail').value.trim();
+    const message = document.getElementById('fmessage').value.trim();
+    const msg = document.getElementById('formMsg');
+    msg.className = 'form-msg';
+
+    if (!name || !email || !message) {
+      msg.className = 'form-msg error';
+      msg.textContent = '⚠ Please fill in your name, email, and message.';
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      msg.className = 'form-msg error';
+      msg.textContent = '⚠ Please enter a valid email address.';
+      return;
+    }
+
+    const type = document.getElementById('ftype').value;
+    const budget = document.getElementById('fbudget').value;
+    const subject = encodeURIComponent(`New Project Inquiry from ${name}`);
+    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nType: ${type||'—'}\nBudget: ${budget||'—'}\n\n${message}`);
+    window.location.href = `mailto:hamo.elafghany@gmail.com?subject=${subject}&body=${body}`;
+
+    msg.className = 'form-msg success';
+    msg.textContent = '✓ Your email client has opened — send the message to reach Hamo!';
+    ['fname','femail','ftype','fbudget','fmessage'].forEach(id => document.getElementById(id).value = '');
+  }
+</script>
+</body>
+</html>
